@@ -1,2 +1,64 @@
-# sekonic-l858d-language-switcher
-macOS utility to switch SEKONIC L-858D / L-858D-U menu languages on firmware 17, 18 and 19. 中文 / English / 日本語.
+# L858D Language Switcher
+
+**中文** · [English](README.en.md)
+
+在 Mac 上将符合条件的世光 **L-858D / L-858D-U** 切换为 **中文、English 或日本語**。使用测光表原有的语言资源，切换后保存设置；应用界面可独立选择中文或英文。
+
+这是独立开发的工具，非世光官方产品。它不刷固件、不改变地区或无线模块配置。
+
+## 下载与安装
+
+**[下载 v0.4.0 Mac 应用](https://github.com/guojiahetongxue/sekonic-l858d-language-switcher/releases/download/v0.4.0/L858D-Language-Switcher-v0.4.0-macOS.zip)** · [查看最新发布](https://github.com/guojiahetongxue/sekonic-l858d-language-switcher/releases/latest) · [更新记录](CHANGELOG.md)
+
+- **macOS 13 或更新版本**，同一个应用支持 Apple 芯片和 Intel Mac。目前没有 Windows 版。
+- 固件必须为 **17、18 或 19**，设备报告的地区代码为 **0000、0001、0002 或 0003**，当前语言为英文、日文或中文。
+- 一根支持数据传输的 **Micro-B USB 线**，只连接一台开机的测光表。
+- 解压下载的应用包，将 `L858D Language Switcher.app` 移入“应用程序”后打开。使用应用无需 Python、Homebrew、REA、Xcode、额外驱动或固件文件。
+
+应用采用 ad-hoc 签名，尚未经 Apple 公证。首次打开可能出现开发者无法验证提示，请按[使用说明中的“Mac 首次打开”](Docs/使用说明.txt)操作。
+
+## 使用
+
+1. 退出旧版语言工具、世光 Data Transfer Software（DTS）、固件更新器及其他测光表程序。
+2. 连接一台测光表并开机，点击 **检测测光表**。
+3. 查看固件、地区、当前语言和验证情况；通过检查后，点击目标语言。
+4. 等待保存完成，期间保持供电及 USB 连接。
+5. 断开 USB，关机再开机，确认菜单语言；可以重新连接并检测。
+
+当前语言按钮会停用。恢复英文或日文使用相同步骤。修改电脑上的应用界面语言不会修改测光表。若结果提示不确定，先按界面说明重启、核对并重新检测，避免直接重复写入。操作记录仅保存在本机，分享前请隐藏序列号。
+
+完整流程和排障见[使用说明](Docs/使用说明.txt)。
+
+## 兼容范围与实测
+
+工具只接受上述明确版本和地区，通过设备身份、当前语言及修改能力检查后才允许写入。**所有实机记录来自同一台日本地区（0002）设备**，不代表所有地区或硬件批次均经过测试。
+
+| 固件 | 实机记录 | 尚未确认的部分 |
+| --- | --- | --- |
+| 17 | 中文写入、保存、读回及重启保持通过；从 18 保留的英文经重启读回通过 | 新的英文写入、日文切换未实测 |
+| 18 | 英文写入、保存、读回通过；原中文在固件转换和重启后保留 | 英文重启保持未单独确认；新的中文、日文写入未实测 |
+| 19 | 中文写入、保存、读回及重启保持通过；英文、日文保存读回通过 | 英文、日文各自的重启保持未确认 |
+
+地区 **0000、0001、0003** 只有固件协议分析和离线测试，尚无对应地区实机验证。应用中的“已有实机记录”指固件与地区配置有观察记录，不表示三种语言的全部操作均通过实测。详细证据和限制见[兼容性与验证](Docs/兼容性与验证.txt)。
+
+**其他固件会停止操作。** 较旧版本请先退出本工具，通过[世光官方软件](https://sekonic.com/downloads/)检查是否可升级至 **19**；如可升级，按官方流程完成升级与重启，彻底退出 DTS 和更新器后，再回来检测、切换语言。DTS 有独立的系统要求。若设备版本高于 19，或官方没有可用的 19 升级，请联系世光支持并等待适配，不自行降级。已是 17、18、19 无需为了切换语言升级。
+
+本项目不包含固件更新器，也不分发世光固件、提取的字体或私人设备记录。保存会调用原厂设置保存功能，保存当前设置块；它不是整机备份或校准工具。
+
+## 从源码构建与测试
+
+在 Mac 上准备 **Python 3** 和 **Apple Command Line Tools**，然后在项目根目录运行：
+
+```sh
+python3 build.py
+sh Tests/Core/run_tests.sh
+"dist/L858D Language Switcher.app/Contents/MacOS/L858DSwitcher" --self-check
+```
+
+构建产物在 `dist/`，包含通用 Mac 应用及压缩包。构建和以上离线测试不会访问测光表；核心测试使用模拟设备及 AddressSanitizer / UndefinedBehaviorSanitizer。模拟测试不能代替实机验证。运行已构建的应用不需要这些开发工具。
+
+## 反馈与许可
+
+请通过 [Issues](https://github.com/guojiahetongxue/sekonic-l858d-language-switcher/issues/new/choose) 提交系统版本、固件版本、地区代码、复现步骤及已隐藏序列号的日志，**不要上传真实序列号或完整设备固件**。
+
+项目代码采用 [MIT License](LICENSE)。
