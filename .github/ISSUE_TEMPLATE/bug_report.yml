@@ -1,0 +1,92 @@
+name: Bug report / 问题反馈
+description: Report a detection, language-change or app issue / 反馈检测、语言切换或应用问题
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the observed result. Logs may contain a device serial number: remove it before sharing. Do not attach firmware files.
+        请描述实际结果。操作记录可能包含设备序列号，分享前请隐藏；不要上传固件文件。
+  - type: input
+    id: app-version
+    attributes:
+      label: App version / 应用版本
+      placeholder: "e.g. 0.4.0"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac chip / 系统版本与芯片
+      placeholder: "e.g. macOS 15.7, Apple M2 / Intel"
+    validations:
+      required: true
+  - type: dropdown
+    id: firmware
+    attributes:
+      label: Meter firmware / 测光表固件
+      options:
+        - "17"
+        - "18"
+        - "19"
+        - "Other — specify below / 其他，请在下方填写"
+        - "Unknown or detection failed / 未知或检测失败"
+    validations:
+      required: true
+  - type: input
+    id: other-firmware
+    attributes:
+      label: Other firmware version, if applicable / 其他固件的具体版本（如适用）
+      description: Copy the version displayed by the app; do not include a serial number. / 填写应用显示的版本，不要填写序列号。
+  - type: dropdown
+    id: region
+    attributes:
+      label: Reported region code / 检测到的地区代码
+      options:
+        - "0000"
+        - "0001"
+        - "0002"
+        - "0003"
+        - "Other — specify in the description / 其他，请在问题描述中填写"
+        - "Unknown or not reported / 未知或未显示"
+    validations:
+      required: true
+  - type: dropdown
+    id: ui-language
+    attributes:
+      label: App interface language / 应用界面语言
+      description: This is the language shown on the Mac, not on the meter. / 指 Mac 上的界面语言，不是测光表语言。
+      options:
+        - "中文"
+        - "English"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps and language direction / 操作步骤与切换方向
+      description: Include the starting and target meter languages, cable/hub setup, and whether other meter software was running. / 请写明原语言、目标语言、数据线或扩展坞连接方式，以及是否运行了其他测光表程序。
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Exact result or error / 实际结果或完整报错
+      description: State what you expected, what happened, and whether USB disconnect/power-off/restart was performed and what the meter then displayed. Do not repeat a failed write just to reproduce it. / 请说明预期与实际结果；如已拔线、关机重启，请写明重启后的显示。无需为复现问题重复写入。
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted operation log / 已隐藏序列号的操作记录
+      description: Use Show logs in the app. Replace serial values and personal file paths before pasting or attaching a log. A screenshot without identifying information is also helpful. / 通过“查看操作记录”获取日志，粘贴或上传前替换序列号和个人路径；也可提供不含个人信息的截图。
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before submitting / 提交前确认
+      options:
+        - label: I removed real serial numbers and personal information from all text and attachments. / 我已隐藏正文及附件中的真实序列号和个人信息。
+          required: true
