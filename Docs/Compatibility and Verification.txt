@@ -1,0 +1,81 @@
+L858D Language Switcher — Compatibility and Verification
+Release version 0.4.0 · 2026-10-16
+
+Explicit gates
+L-858D / L-858D-U family; USB VID 0A41, PID 7004, usage page 65440, input size 7,
+output size 36; valid serial, one device, exclusive access and serial pinning.
+Firmware must be exactly 0017, 0018 or 0019; region 0000, 0001, 0002 or 0003;
+current language 0 English, 1 Japanese or 2 Simplified Chinese. These are twelve
+explicit profiles, not an unrestricted version range. Unknown firmware/regions stop
+before service unlock; unknown languages stop before setter/save. There is no bypass.
+The universal app targets macOS 13+ on Apple silicon/Intel, not exhaustive Mac/OS coverage.
+Windows, other meter models and unlisted firmware/regions are not supported.
+
+Static evidence
+All three official images contain English, Japanese and Chinese resources. Native language
+cycling and resource pointers establish IDs 0/1/2. Language getter/setter and SETT-save
+paths do not branch on region. The selected index is language, not the separate region index.
+Fixed English/Japanese/Chinese setters are Z00003/Z00013/Z00023; W0000F saves settings
+and requires W00003. The flow checks language before saving and again afterward.
+Region 0000 selects L-858D-U (U.S. model); 0001 is an explicit valid region without an
+assumed country; 0002 defaults to Japanese and 0003 to Chinese. USB/HID descriptors match
+across all three versions; the reviewed descriptor path is independent of region.
+Radio code was used as region-enumeration evidence only. No radio or region writes are used.
+
+Physical coverage: one Japanese-region 0002 unit
+17: Chinese setter/save/readback and unplug/restart persistence passed. In the latest run,
+English retained from 18 survived downgrade and an explicitly confirmed restart, with
+independent readback 0. A new English-to-Chinese write then passed save/readback, user
+restart/display confirmation and a final five-command read of 0017/0002/2 without setter/save.
+No fresh English setter or Japanese switch was tested on 17 in this run.
+18: Existing Chinese survived the transition from 19 and an explicitly confirmed restart,
+with readback 2. An English setter/save/readback passed all twelve steps; a later five-step
+read still returned 0. The user reported broadly normal operation but did not individually
+confirm English restart steps/display while still on 18. That persistence result is not
+marked passed. Fresh Chinese and Japanese writes were not tested on 18.
+19: Chinese-to-Japanese-to-Chinese save/readback passed; Chinese restart/display/readback
+passed. Japanese did not receive a separate restart test. English setter/save/readback
+passed, but the subsequent restart report and read were Chinese. English persistence is
+not verified; the reason is not established by the current record.
+These observations are one unit, not independent hardware samples. Regions 0000/0001/0003
+have static and offline evidence only. No guarantee covers every direction, batch or
+metering accuracy. Retained language after a firmware change is not a fresh setter test.
+
+Evidence labels and capabilities
+The 0002 profiles for 17/18/19 are hardware_verified: this means a firmware/region has
+physical observations, not that every language and restart case passed. For 18 the partial
+coverage above is especially relevant. Other reviewed regions remain static_verified.
+Original logs retain their build-time labels. They are not rewritten after later tests.
+languageWriteSupported/supportedLanguages appear only after checks pass and are revoked
+on error. The app also checks firmware, region, serial, label and uncertainty state.
+
+Write scope and failure handling
+The original save operation persists the whole SETT block, not one flash byte. The reviewed
+flags=0 path does not save CALI, USER or PRF, flash firmware or change region/radio/calibration.
+Every response is checked. Timeouts, stale/duplicate data or unexpected replies stop without
+automatic retry. Final firmware and region must equal their initial values, even if a changed
+value would otherwise be supported. Already-target is a no-op. An attempted write followed
+by failure is reported as uncertain. Normal power-off may persist a changed RAM language;
+do not assume a temporary change automatically disappears.
+
+Unsupported firmware
+Use official DTS to upgrade older firmware to 19. Follow its restart instructions, fully
+quit DTS/updater, then reconnect to this utility. No updater, downgrader or firmware is
+included. For versions newer than 19, or if official 19 is unavailable, contact Sekonic and wait;
+research downgrades are not user instructions. DTS has its own system requirements.
+Official software: https://sekonic.com/downloads/
+Japanese support: https://www.sekonic.co.jp/product/support/
+
+Offline verification and distribution
+1053 core scenarios passed with AddressSanitizer and UndefinedBehaviorSanitizer, covering all
+twelve profiles, three current/target languages, no-op, errors and identity/firmware/region drift.
+Release checks appear in validation-report.json in the release directory.
+Offline mocks do not replace physical tests. The app is self-contained; Python/Homebrew/REA/
+DTS or a research environment are not runtime dependencies. App/source packages contain no
+Sekonic firmware, extracted fonts, private device logs or actual device serial numbers.
+The app is ad-hoc signed, not Apple-notarized. See Read Me.txt for first-open instructions.
+No full-device backup, calibration recovery or measurement-accuracy validation is provided.
+
+Official model references
+https://warranty.sekonic.com/faq
+https://sekonic.com/sekonic-l-858d-u-speedmaster-light-meter/

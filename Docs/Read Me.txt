@@ -1,0 +1,83 @@
+L858D Language Switcher
+Release version 0.4.0
+
+Purpose
+Switch a compatible Sekonic L-858D / L-858D-U to English, Japanese or Simplified Chinese.
+The app selects languages already included in the original firmware. It does not flash
+firmware or change the meter's region or radio configuration. Its English/Chinese app
+interface is independent of the meter language. This is not an official Sekonic product.
+
+Installation and requirements
+• macOS 13 or later. One universal app supports Apple silicon and Intel Macs.
+• A data-capable Micro-B USB cable; connect only one powered-on meter.
+• Firmware exactly 17, 18 or 19; reported region 0000, 0001, 0002 or 0003.
+• Current meter language English, Japanese or Chinese.
+Extract the Mac app ZIP, move L858D Language Switcher.app to Applications and open it.
+The app is self-contained. Switching supported firmware needs no Python, Homebrew, REA,
+Xcode, Sekonic Data Transfer Software (DTS), additional drivers or firmware files.
+The separate source ZIP is for developers. A Windows app is not provided.
+
+How to use
+1. Quit older Language Switchers, Sekonic DTS, its firmware updater and other meter tools.
+2. Connect one meter with a data cable, power it on and click the detection button.
+3. Check the model, firmware, region, current language and validation notice.
+4. Choose the target meter language and save. Keep USB and power connected until finished.
+5. After the save acknowledgment, unplug USB, power off and on, and check the menu language.
+   You can reconnect and detect again to verify the result.
+The current-language button is disabled, so an unchanged language is not saved again.
+To restore Japanese or English, use the same process with that language. Changing the
+app interface language does not change the meter.
+
+Other firmware versions
+Only the explicit versions 17, 18 and 19 are allowed. Unsupported versions stop with no
+bypass. For older firmware, use official Sekonic DTS to upgrade to 19 first:
+1. Quit this utility. Select L-858D on the official download page, obtain DTS for a
+   compatible computer, and read Sekonic's software guide.
+2. Use DTS's Update Setting tab and follow the official update instructions for 19.
+   Keep power and USB connected during the update; unplug and restart when instructed.
+3. Fully quit DTS and its updater, reconnect the meter, open this utility and detect it.
+   Switch language after firmware 19 is identified.
+There is no need to upgrade 17, 18 or 19 just to switch language. This utility contains
+no updater, downgrader or Sekonic firmware. Research downgrades are not installation steps.
+DTS has separate system requirements; this utility's macOS 13+ support does not establish
+DTS compatibility with those systems. If only a newer unsupported firmware is offered,
+or the meter is already newer than 19, retain the result, contact Sekonic support and wait;
+do not downgrade on your own.
+Official software: https://sekonic.com/downloads/
+Japanese support: https://www.sekonic.co.jp/product/support/
+
+Physical validation
+All physical tests used one Japanese-region (0002) unit.
+• 17 and 19: Chinese switching, saving, readback and persistence after unplugging and
+  restarting were verified.
+• 18: English setter/save/readback and a later independent read passed. Existing Chinese
+  survived the firmware transition and a confirmed restart. A fresh Chinese/Japanese
+  write was not tested on 18; its English restart steps were not individually confirmed.
+• 17: retained English from 18 survived a confirmed restart and readback; this is not a
+  fresh English setter test on 17.
+• 19: Japanese and English save/readback passed, but their separate restart persistence
+  was not confirmed.
+Regions 0000 (U.S. L-858D-U), 0001 (another reviewed region) and 0003 (Chinese default)
+have static firmware and offline-test evidence only. All three language operations have
+protocol evidence, but not every language direction, region or hardware batch was tested.
+See Compatibility and Verification.txt for the detailed limits.
+
+Troubleshooting
+• Not found: check power, data cable and connection; try a direct Mac connection.
+• Cannot obtain exclusive access: quit other meter software and detect again.
+• Unsupported region/language: keep the operation log; checks cannot be bypassed.
+• Interrupted or uncertain operation: do not repeatedly press language buttons. State
+  may have changed. After the app stops, unplug, power off/on, check the menu, then reconnect.
+• Hide the serial number before sharing logs. Logs are stored locally.
+
+Opening on another Mac
+The app is ad-hoc signed, not Apple-notarized. macOS may be unable to verify its developer.
+After checking the source and file integrity, try opening it, then use Open Anyway in
+System Settings > Privacy & Security if offered. Stop and investigate an explicit malware
+or damaged-file warning. Do not disable system security or remove download security attributes.
+Apple guidance: https://support.apple.com/en-us/102445
+
+Saving and resetting
+The original settings-save function persists the current SETT block, including language.
+This is not a full-device backup or calibration-recovery tool; measurement accuracy was
+not calibrated. A factory reset may restore the region's default language.
